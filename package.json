@@ -6,7 +6,9 @@
   "author": "Matti Jokitulppo <melonmanchan@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@slack/client": "^4.8.0",
     "cheerio": "^1.0.0-rc.2",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "redis": "^2.8.0"
   }
 }
