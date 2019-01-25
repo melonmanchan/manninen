@@ -1,0 +1,12 @@
+{
+  "name": "manninen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:melonmanchan/manninen.git",
+  "author": "Matti Jokitulppo <melonmanchan@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "node-fetch": "^2.3.0"
+  }
+}
