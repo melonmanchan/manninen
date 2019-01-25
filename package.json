@@ -1,5 +1,8 @@
 {
   "name": "manninen",
+  "scripts": {
+    "start": "node main.js"
+  },
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:melonmanchan/manninen.git",
