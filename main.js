@@ -9,8 +9,9 @@ const client = redis.createClient(process.env.REDIS_URL)
 const existsAsync = promisify(client.exists).bind(client)
 const setAsync = promisify(client.set).bind(client)
 
-const url = process.env.SLACK_WEBHOOK_URL
-const webhook = new IncomingWebhook(url)
+const webhooksUrls = process.env.SLACK_WEBHOOK_URLS.split(',')
+const webhooks = webhooksUrls.map(url => new IncomingWebhook(url))
+console.log(webhooksUrls)
 
 async function main() {
   const page = await fetch(ILTALEHTI_URL)
@@ -43,15 +44,17 @@ async function main() {
       console.log(`Persisting link ${post.link}`)
       client.set(post.link, 1)
 
-      webhook.send(`${post.text} - ${post.link}`, function(err, res) {
-        if (err) {
-          console.log('Error:', err)
-        } else {
-          console.log('Message sent: ', res)
-        }
+      webhooks.forEach(w => {
+        w.send(`${post.text} - ${post.link}`, function(err, res) {
+          if (err) {
+            console.log('Error:', err)
+          } else {
+            console.log('Message sent: ', res)
+          }
+        })
       })
     }
   })
 }
 
-setInterval(main, 60000)
+main()
