@@ -11,7 +11,6 @@ const setAsync = promisify(client.set).bind(client)
 
 const webhooksUrls = process.env.SLACK_WEBHOOK_URLS.split(',')
 const webhooks = webhooksUrls.map(url => new IncomingWebhook(url))
-console.log(webhooksUrls)
 
 async function main() {
   const page = await fetch(ILTALEHTI_URL)
@@ -42,7 +41,7 @@ async function main() {
 
     if (!reply) {
       console.log(`Persisting link ${post.link}`)
-      client.set(post.link, 1)
+      await setAsync(post.link, 1)
 
       webhooks.forEach(w => {
         w.send(`${post.text} - ${post.link}`, function(err, res) {
