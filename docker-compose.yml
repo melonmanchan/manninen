@@ -1,0 +1,9 @@
+version: '3.3'
+
+services:
+  # Redis for session-storage
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
