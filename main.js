@@ -17,7 +17,6 @@ async function main() {
 
   contents.forEach(async post => {
     const {assetId, title, url} = post
-    console.log(post)
     const reply = await existsAsync(assetId);
 
     if (!reply) {
