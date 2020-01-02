@@ -1,50 +1,30 @@
-const fetch = require('node-fetch')
-const { promisify } = require('util')
-const { IncomingWebhook } = require('@slack/client')
-const redis = require('redis')
-const cheerio = require('cheerio')
-const ILTALEHTI_URL = 'https://www.is.fi/haku/?query=Tuomas%20Manninen'
+const fetch = require("node-fetch");
+const {promisify} = require("util");
+const {IncomingWebhook} = require("@slack/client");
+const redis = require("redis");
+const ILTALEHTI_URL = 'https://www.is.fi/api/search/Tuomas%20Manninen/kaikki/month'
 
-const client = redis.createClient(process.env.REDIS_URL)
-const existsAsync = promisify(client.exists).bind(client)
-const setAsync = promisify(client.set).bind(client)
+const client = redis.createClient(process.env.REDIS_URL);
+const existsAsync = promisify(client.exists).bind(client);
+const setAsync = promisify(client.set).bind(client);
 
-const webhooksUrls = process.env.SLACK_WEBHOOK_URLS.split(',')
-const webhooks = webhooksUrls.map(url => new IncomingWebhook(url))
+const webhooksUrls = (process.env.SLACK_WEBHOOK_URLS || '').split(",");
+const webhooks = webhooksUrls.map(url => new IncomingWebhook(url));
 
 async function main() {
-  const page = await fetch(ILTALEHTI_URL)
-  const text = await page.text()
-  const $ = cheerio.load(text)
+  const page = await fetch(ILTALEHTI_URL);
+  const contents = await page.json();
 
-  const links = $('.search-result > .block-link')
-    .map(function(_index, element) {
-      return `https://www.is.fi${$(element).attr('href')}`
-    })
-    .get()
-
-  const titles = $('.search-result .title')
-    .map(function(_index, element) {
-      return $(element).text()
-    })
-    .get()
-
-  const posts = links.map((l, i) => {
-    return {
-      link: l,
-      text: titles[i]
-    }
-  })
-
-  posts.forEach(async post => {
-    const reply = await existsAsync(post.link)
+  contents.forEach(async post => {
+    const {assetId, title, url} = post
+    console.log(post)
+    const reply = await existsAsync(assetId);
 
     if (!reply) {
-      console.log(`Persisting link ${post.link}`)
-      await setAsync(post.link, 1)
-
+      console.log(`Persisting link ${assetId}`);
+      await setAsync(assetId, 1);
       webhooks.forEach(w => {
-        w.send(`${post.text} - ${post.link}`, function(err, res) {
+        w.send(`${title} - https://is.fi${url}`, function (err, res) {
           if (err) {
             console.log('Error:', err)
           } else {
@@ -53,7 +33,7 @@ async function main() {
         })
       })
     }
-  })
+  });
 }
 
-main()
+main();
