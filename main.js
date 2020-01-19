@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const {promisify} = require("util");
 const {IncomingWebhook} = require("@slack/client");
 const redis = require("redis");
-const ILTALEHTI_URL = 'https://www.is.fi/api/search/Tuomas%20Manninen/kaikki/month'
+const ILTALEHTI_URL = 'https://www.is.fi/api/search/Tuomas%20Manninen/kaikki/month/new/0/50'
 
 const client = redis.createClient(process.env.REDIS_URL);
 const existsAsync = promisify(client.exists).bind(client);
