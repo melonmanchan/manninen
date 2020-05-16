@@ -11,6 +11,7 @@
   "dependencies": {
     "@slack/client": "^4.8.0",
     "node-fetch": "^2.3.0",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "uuid": "^8.0.0"
   }
 }
