@@ -12,7 +12,7 @@ const existsAsync = promisify(client.exists).bind(client);
 const setAsync = promisify(client.set).bind(client);
 
 const url = process.env.SLACK_WEBHOOK_URLS;
-const webbook = url ? new IncomingWebhook(url) : undefined;
+const webhook = url ? new IncomingWebhook(url) : undefined;
 
 const id = uuid.v4();
 const log = (msg, ...rest) => console.log(`[id:${id}] ${msg}`, rest);
@@ -44,9 +44,11 @@ async function main() {
 
       const fullTitle = `${title} - ${url}`;
 
-      if (webbook) {
+      log(`WARNING: WEBHOOK UNDEFINED`);
+
+      if (webhook) {
         log(`Sending link ${fullTitle}`);
-        await webbook.send(fullTitle);
+        await webhook.send(fullTitle);
       }
     } else {
       log(`Post with id ${id} already exists`);
