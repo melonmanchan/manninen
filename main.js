@@ -44,11 +44,11 @@ async function main() {
 
       const fullTitle = `${title} - ${url}`;
 
-      log(`WARNING: WEBHOOK UNDEFINED`);
-
       if (webhook) {
         log(`Sending link ${fullTitle}`);
         await webhook.send(fullTitle);
+      } else {
+        log(`WARNING: WEBHOOK UNDEFINED`);
       }
     } else {
       log(`Post with id ${id} already exists`);
