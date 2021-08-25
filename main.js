@@ -11,8 +11,8 @@ const client = redis.createClient(process.env.REDIS_URL);
 const existsAsync = promisify(client.exists).bind(client);
 const setAsync = promisify(client.set).bind(client);
 
-const webhooksUrls = (process.env.SLACK_WEBHOOK_URLS || "").split(",");
-const webhooks = webhooksUrls.map((url) => new IncomingWebhook(url));
+const url = process.env.SLACK_WEBHOOK_URLS;
+const webbook = url ? new IncomingWebhook(url) : undefined;
 
 const id = uuid.v4();
 const log = (msg, ...rest) => console.log(`[id:${id}] ${msg}`, rest);
@@ -40,15 +40,14 @@ async function main() {
 
       await setAsync(id, 1);
 
-      webhooks.forEach((w) => {
-        w.send(`${title} - ${url}`, function (err, res) {
-          if (err) {
-            log("Error:", err);
-          } else {
-            log("Message sent: ", res);
-          }
-        });
-      });
+      log("Link persised succesfully");
+
+      const fullTitle = `${title} - ${url}`;
+
+      if (webbook) {
+        log(`Sending link ${fullTitle}`);
+        await webbook.send(fullTitle);
+      }
     } else {
       log(`Post with id ${id} already exists`);
     }
