@@ -31,7 +31,7 @@ async function main() {
     const post = contents[i];
     log("Handling post", post);
 
-    const { href, id } = post;
+    const { href, id, title } = post;
     const url = `https://is.fi${href}`;
     const reply = await existsAsync(id);
 
