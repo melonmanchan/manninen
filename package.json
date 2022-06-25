@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@slack/client": "^4.8.0",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.7",
     "redis": "^2.8.0",
     "uuid": "^8.0.0"
   }
